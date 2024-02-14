@@ -1,0 +1,133 @@
+{
+	"info": {
+		"_postman_id": "acaaefb3-5a3a-4ed9-b4dc-4ad03603ab23",
+		"name": "Payment gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "8228251"
+	},
+	"item": [
+		{
+			"name": "Successful payment example",
+			"item": [
+				{
+					"name": "1- Create a new session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"d6f49736-3922-4520-8c74-b2fee3e0d113\",\n  \"amount\": {\n    \"currency\": \"EUR\",\n    \"value\": \"100\"\n  },\n  \"customerCardInfo\": {\n    \"cardNumber\": \"4917484589897107\",\n    \"cvv\": \"123\",\n    \"expiryMonth\": \"02\",\n    \"expiryYear\": \"25\"\n  },\n  \"merchantID\": \"amazonID\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8070/v1/session/"
+					},
+					"response": []
+				},
+				{
+					"name": "2- Start the session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "http://localhost:8070/v1/payment/d6f49736-3922-4520-8c74-b2fee3e0d113"
+					},
+					"response": []
+				},
+				{
+					"name": "3- Retrieve session details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8070/v1/payment/d6f49736-3922-4520-8c74-b2fee3e0d113"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Invalid CVC example",
+			"item": [
+				{
+					"name": "1- Create a new session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"d6f49736-3922-4520-8c74-b2fee3e0d114\",\n  \"amount\": {\n    \"currency\": \"EUR\",\n    \"value\": \"100\"\n  },\n  \"customerCardInfo\": {\n    \"cardNumber\": \"invalid-cvc\",\n    \"cvv\": \"123\",\n    \"expiryMonth\": \"02\",\n    \"expiryYear\": \"25\"\n  },\n  \"merchantID\": \"amazonID\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8070/v1/session/"
+					},
+					"response": []
+				},
+				{
+					"name": "2- Start the session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "http://localhost:8070/v1/payment/d6f49736-3922-4520-8c74-b2fee3e0d114"
+					},
+					"response": []
+				},
+				{
+					"name": "3- Retrieve session details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8070/v1/payment/d6f49736-3922-4520-8c74-b2fee3e0d114"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Insufficient funds",
+			"item": [
+				{
+					"name": "1- Create a new session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"d6f49736-3922-4520-8c74-b2fee3e0d115\",\n  \"amount\": {\n    \"currency\": \"EUR\",\n    \"value\": \"100\"\n  },\n  \"customerCardInfo\": {\n    \"cardNumber\": \"insufficient-funds\",\n    \"cvv\": \"123\",\n    \"expiryMonth\": \"02\",\n    \"expiryYear\": \"25\"\n  },\n  \"merchantID\": \"amazonID\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8070/v1/session/"
+					},
+					"response": []
+				},
+				{
+					"name": "2- Start the session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "http://localhost:8070/v1/payment/d6f49736-3922-4520-8c74-b2fee3e0d113"
+					},
+					"response": []
+				},
+				{
+					"name": "3- Retrieve session details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8070/v1/payment/d6f49736-3922-4520-8c74-b2fee3e0d115"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

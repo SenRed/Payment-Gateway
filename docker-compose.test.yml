@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  payment_gateway_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: payment_gateway_test
+    ports:
+      - "8070:8070"
+    command: sh -c "/wait-for-it postgres_test:5432 --timeout=30 && go clean -testcache && go test -v ./e2e/..."
+    depends_on:
+      - postgres_test
+    volumes:
+      - .env:/app/.env
+    environment:
+      POSTGRES_HOST_ADDRESS: postgres_test
+      POSTGRES_DB: test_payment
+      HTTP_PORT: 8070
+      LOGGING_JSON: true
+      LOGGING_LEVEL: info
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DBNAME: payment_test_db
+      POSTGRES_PORT: 5432
+      POSTGRES_SSL_MODE: "disable"
+      POSTGRES_TIME_ZONE: "CET"
+      POSTGRES_LOG: false
+
+  postgres_test:
+    image: "postgres:latest"
+    container_name: payment_test_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: payment_test_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password

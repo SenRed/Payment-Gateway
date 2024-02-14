@@ -1,0 +1,210 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This API aims to provide payment gateway endpoints documentation.",
+        "title": "payment-gateway",
+        "contact": {},
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8070",
+    "basePath": "/",
+    "paths": {
+        "/v1/payment/{session-id}": {
+            "get": {
+                "description": "Retrieve payment details for a session by providing the session ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get payment details",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Session ID",
+                        "name": "session-id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "All transaction of the session.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.TransactionResult"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Request parameters are invalid.",
+                        "schema": {
+                            "$ref": "#/definitions/ui.ResultError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - An error occurred while processing the request on the server side.",
+                        "schema": {
+                            "$ref": "#/definitions/ui.ResultError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Start a transaction by sending the session ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Start a transaction",
+                "operationId": "start-transaction",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Session ID",
+                        "name": "session-id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK - The request was executed as expected. The statusMessage field contains information about the transaction status.",
+                        "schema": {
+                            "$ref": "#/definitions/model.TransactionResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Request parameters are invalid.",
+                        "schema": {
+                            "$ref": "#/definitions/ui.ResultError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - An error occurred while processing the request on the server side.",
+                        "schema": {
+                            "$ref": "#/definitions/ui.ResultError"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/session/": {
+            "post": {
+                "description": "Create a new session for a transaction by sending an idempotency key, card information and amount/currency.",
+                "summary": "Create a session",
+                "operationId": "create-session",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "contentBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ui.SessionDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK - Session created. No data returned in the response body."
+                    },
+                    "400": {
+                        "description": "Bad Request - Request parameters are invalid.",
+                        "schema": {
+                            "$ref": "#/definitions/ui.ResultError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - An error occurred while processing the request on the server side.",
+                        "schema": {
+                            "$ref": "#/definitions/ui.ResultError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Amount": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string",
+                    "example": "EUR"
+                },
+                "value": {
+                    "type": "string",
+                    "example": "100"
+                }
+            }
+        },
+        "model.CustomerCardInfo": {
+            "type": "object",
+            "properties": {
+                "cardNumber": {
+                    "type": "string",
+                    "example": "4917484589897107"
+                },
+                "cvv": {
+                    "type": "string",
+                    "example": "123"
+                },
+                "expiryMonth": {
+                    "type": "string",
+                    "example": "02"
+                },
+                "expiryYear": {
+                    "type": "string",
+                    "example": "25"
+                }
+            }
+        },
+        "model.TransactionResult": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "ui.ResultError": {
+            "type": "object",
+            "properties": {
+                "reason": {
+                    "type": "string"
+                }
+            }
+        },
+        "ui.SessionDTO": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "$ref": "#/definitions/model.Amount"
+                },
+                "customerCardInfo": {
+                    "$ref": "#/definitions/model.CustomerCardInfo"
+                },
+                "merchantID": {
+                    "type": "string",
+                    "example": "amazonID"
+                },
+                "sessionId": {
+                    "type": "string",
+                    "example": "d6f49736-3922-4520-8c74-b2fee3e0d113"
+                }
+            }
+        }
+    }
+}

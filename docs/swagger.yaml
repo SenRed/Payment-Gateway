@@ -1,0 +1,147 @@
+basePath: /
+definitions:
+  model.Amount:
+    properties:
+      currency:
+        example: EUR
+        type: string
+      value:
+        example: "100"
+        type: string
+    type: object
+  model.CustomerCardInfo:
+    properties:
+      cardNumber:
+        example: "4917484589897107"
+        type: string
+      cvv:
+        example: "123"
+        type: string
+      expiryMonth:
+        example: "02"
+        type: string
+      expiryYear:
+        example: "25"
+        type: string
+    type: object
+  model.TransactionResult:
+    properties:
+      code:
+        type: string
+      date:
+        type: string
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  ui.ResultError:
+    properties:
+      reason:
+        type: string
+    type: object
+  ui.SessionDTO:
+    properties:
+      amount:
+        $ref: '#/definitions/model.Amount'
+      customerCardInfo:
+        $ref: '#/definitions/model.CustomerCardInfo'
+      merchantID:
+        example: amazonID
+        type: string
+      sessionId:
+        example: d6f49736-3922-4520-8c74-b2fee3e0d113
+        type: string
+    type: object
+host: localhost:8070
+info:
+  contact: {}
+  description: This API aims to provide payment gateway endpoints documentation.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: payment-gateway
+  version: "1.0"
+paths:
+  /v1/payment/{session-id}:
+    get:
+      description: Retrieve payment details for a session by providing the session
+        ID.
+      parameters:
+      - description: Session ID
+        in: path
+        name: session-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: All transaction of the session.
+          schema:
+            items:
+              $ref: '#/definitions/model.TransactionResult'
+            type: array
+        "400":
+          description: Bad Request - Request parameters are invalid.
+          schema:
+            $ref: '#/definitions/ui.ResultError'
+        "500":
+          description: Internal Server Error - An error occurred while processing
+            the request on the server side.
+          schema:
+            $ref: '#/definitions/ui.ResultError'
+      summary: Get payment details
+    post:
+      description: Start a transaction by sending the session ID.
+      operationId: start-transaction
+      parameters:
+      - description: Session ID
+        in: path
+        name: session-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK - The request was executed as expected. The statusMessage
+            field contains information about the transaction status.
+          schema:
+            $ref: '#/definitions/model.TransactionResult'
+        "400":
+          description: Bad Request - Request parameters are invalid.
+          schema:
+            $ref: '#/definitions/ui.ResultError'
+        "500":
+          description: Internal Server Error - An error occurred while processing
+            the request on the server side.
+          schema:
+            $ref: '#/definitions/ui.ResultError'
+      summary: Start a transaction
+  /v1/session/:
+    post:
+      description: Create a new session for a transaction by sending an idempotency
+        key, card information and amount/currency.
+      operationId: create-session
+      parameters:
+      - description: Request body
+        in: body
+        name: contentBody
+        required: true
+        schema:
+          $ref: '#/definitions/ui.SessionDTO'
+      responses:
+        "200":
+          description: OK - Session created. No data returned in the response body.
+        "400":
+          description: Bad Request - Request parameters are invalid.
+          schema:
+            $ref: '#/definitions/ui.ResultError'
+        "500":
+          description: Internal Server Error - An error occurred while processing
+            the request on the server side.
+          schema:
+            $ref: '#/definitions/ui.ResultError'
+      summary: Create a session
+swagger: "2.0"

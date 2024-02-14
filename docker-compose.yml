@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  payment_gateway:
+    container_name: payment_gateway
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "/wait-for-it postgres:5432 --timeout=30 && ./payment_gateway"
+    ports:
+      - "8070:8070"
+    volumes:
+      - .env:/app/.env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: "postgres:latest"
+    container_name: payment_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: payment
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
