@@ -15,21 +15,26 @@
     * [3. Retrieve the Detail of a Payment Session](#3-retrieve-the-detail-of-a-payment-session)
   * [How the System Works Internally](#how-the-system-works-internally)
     * [Why Should We Create a Session Before Initiating Payment?](#why-should-we-create-a-session-before-initiating-payment)
-  * [Technical Aspects](#technical-aspects)
-    * [How to Reflect the Business into the Source Code?](#how-to-reflect-the-business-into-the-source-code)
+    * [How to Reflect the Business logic into the Source Code?](#how-to-reflect-the-business-logic-into-the-source-code)
   * [How to Use the Project](#how-to-use-the-project)
     * [Before Starting](#before-starting)
     * [Starting the Project](#starting-the-project)
     * [API Documentation](#api-documentation)
-  * [How to Test](#how-to-test)
+    * [How to Test](#how-to-test)
     * [Bank simulator](#bank-simulator)
   * [Areas of Improvement](#areas-of-improvement)
-    * [Solutions:](#solutions-)
+    * [Solutions](#solutions)
   * [Conclusion](#conclusion)
 <!-- TOC -->
  
 ## Introduction
-The objective of this project is to build a payment gateway, which is a large complex project with many features. For this project, I focused only on the following functionalities:
+Payement Ecosystem is incredibly complex, [Alex XU](https://blog.bytebytego.com/i/78608860/the-payments-ecosystem) did a great job summarizing on part of payment ecosystem, as following
+![payment-ecosystem.png](docs%2Fpayment-ecosystem.png)
+
+In this project, we focus primarily on steps 2 and 3, while acknowledging that other steps exist but are beyond the scope of our current focus.
+However, we've made efforts to simulate interactions related to those steps.
+
+In order to achieve that, I have implemented the following functionalities:
 1. A merchant should be able to process a payment through the payment gateway and receive either a successful or unsuccessful response.
 2. A merchant should be able to retrieve the details of a previously made payment.
 3. To process the payment request, I have built a bank processor simulator.
@@ -76,8 +81,7 @@ However, if the merchant website loses its connection to the payment gateway, th
 
 To mitigate this, I introduced an idempotency key. With this approach, the merchant website can retry multiple calls, ensuring that the end result remains consistent.
 
-## Technical Aspects
-### How to Reflect the Business into the Source Code?
+### How to Reflect the Business logic into the Source Code?
 For the purpose of this project, I chose to use a few concepts of Domain-Driven-Design and hexagonal architecture.
 
 ## How to Use the Project
@@ -113,7 +117,7 @@ When the server is up, the API documentation is accessible at this link: http://
 
 ![img.png](docs/swagger.png)
 
-## How to Test
+### How to Test
 To make testing easy, I provide a Postman collection with different use cases covering the following file: [Postman collection](docs%2FPayment%20gateway.postman_collection.json)
 
 To test, follow these 3 steps:
@@ -138,7 +142,7 @@ Let's say we want to deploy this application behind a load balancer; the system 
 ![actual-system-design.png](docs%2Factual-system-design.png)
 One of the issues we are facing is that processing the payment may take a long time, resulting in a loss of connection between the merchant and the payment system.
 
-### Solutions:
+### Solutions
 1. Maintain the connection by using keep-alive, but this solution is deprecated and may result in resource consumption.
 2. Instead of waiting for the response, the client could receive the result by providing a callback endpoint, and in the meantime, the payment gateway could process the payment request asynchronously.
 
