@@ -29,10 +29,11 @@
  
 ## Introduction
 Payement Ecosystem is incredibly complex, [Alex XU](https://blog.bytebytego.com/i/78608860/the-payments-ecosystem) did a great job summarizing on part of payment ecosystem, as following
+
 ![payment-ecosystem.png](docs%2Fpayment-ecosystem.png)
 
 In this project, we focus primarily on steps 2 and 3, while acknowledging that other steps exist but are beyond the scope of our current focus.
-However, we've made efforts to simulate interactions related to those steps.
+However, I've made efforts to simulate interactions related to those steps.
 
 In order to achieve that, I have implemented the following functionalities:
 1. A merchant should be able to process a payment through the payment gateway and receive either a successful or unsuccessful response.
