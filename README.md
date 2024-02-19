@@ -96,10 +96,12 @@ Optionally:
 - [Mockgen](https://github.com/golang/mock) to generate Mocks
 
 ### Starting the Project
-You can use:
+You can use
 ```bash
 make start
 ```
+The project will start in port **localhost:8070**
+
 Other commands:
 
 | Command               |  Alias  |                          Description |
